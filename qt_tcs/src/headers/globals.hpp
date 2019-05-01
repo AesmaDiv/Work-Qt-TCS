@@ -4,16 +4,16 @@
 #include <vector>
 #include <string>
 
-#include "./dispatcher.hpp"
-#include "./database.hpp"
+#include "../classes/dispatcher.hpp"
+#include "../classes/database.hpp"
 
 namespace Globals {
     namespace Consts {
         static const std::vector<std::string> TESTLIST_COLUMNS = {
-            "ID","EndDT","OrderNum","Serial"
+            "ID","EndDT","OrderNum","SerialNum"
         };
         static const std::vector<std::string> RECORD_COLUMNS = {
-            "ID","BeginDT","EndDT","Customer","OrderNum","StationType","StationClass","Serial","CurrentRat","CurrentMinLim","CurrentMaxLim",
+            "ID","BeginDT","EndDT","Customer","OrderNum","StationType","StationClass","SerialNum","CurrentRat","CurrentMinLim","CurrentMaxLim",
             "Timer","Operator","DataStages","ResultID","Verdict","Information","Note","Stand","d1","d2","d3","d4","d5"
         };
         static const std::vector<std::string> TYPE_COLUMNS = {
@@ -21,7 +21,10 @@ namespace Globals {
         };
     }
     namespace Vars {
+        QObject* root_wnd = nullptr;
         Dispatcher *dispatcher = nullptr;
+        std::string path_to_db = "/home/aesma/Developer/db/TCS.sqlite";
+
     }
 }
 

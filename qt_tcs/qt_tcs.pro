@@ -31,12 +31,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    src/headers/dispatcher.hpp \
-    src/headers/database.hpp \
+    src/classes/dispatcher.hpp \
+    src/classes/database.hpp \
     src/headers/globals.hpp \
     src/headers/funcs.hpp \
     src/headers/gui.hpp \
-    src/headers/events.hpp
+    src/headers/events.hpp \
+    src/classes/testlistrow.hpp
 
 DISTFILES +=
 LIBS += -lsqlite3

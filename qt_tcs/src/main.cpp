@@ -17,19 +17,15 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    QObject* root = engine.rootObjects()[0];
-    Globals::Vars::dispatcher = new Dispatcher(root);
+    Globals::Vars::root_wnd = engine.rootObjects()[0];
+    Globals::Vars::dispatcher = new Dispatcher(Globals::Vars::root_wnd);
+
     QObject::connect(Globals::Vars::dispatcher, &Dispatcher::eventSignal_String, Events::EventString);
     QObject::connect(Globals::Vars::dispatcher, &Dispatcher::eventSignal_Variant, Events::EventVariant);
 
-    Events::RegisterEvent(root, SIGNAL(onEvent(QString)), SLOT(eventSlot_String(QString)));
-    Events::RegisterEvent(root, "testList", SIGNAL(onSelectionChanged(QVariant)), SLOT(eventSlot_Variant(QVariant)));
+    GUI::TestList::Fill(Globals::Vars::root_wnd);
 
-    GUI::TestList::Fill(root);
-
-    QObject* tl = root->findChild<QObject*>("testList");
-    if (tl)
-        QObject::connect(tl, SIGNAL(onItemClicked(QString)), Globals::Vars::dispatcher, SLOT(eventSlot_String(QString)));
+    Events::RegisterEvent("testList",SIGNAL(onItemClicked(QString)), SLOT(eventSlot_String(QString)));
 
     return app.exec();
 }

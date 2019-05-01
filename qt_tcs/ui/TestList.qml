@@ -7,6 +7,8 @@ Rectangle {
     signal onFilter(string message)
     signal onItemClicked(string message)
 
+//    property ListModel testListModel: ListModel{}
+
     id: root
     width: 340
     height: 510
@@ -54,13 +56,7 @@ Rectangle {
         y: 38
         width: 320
         height: 454
-        model: testListViewModel
-        delegate: TestListRow {
-            MouseArea {
-                anchors.fill: parent
-                onClicked: onItemClicked(modelData)
-            }
-        }
+        model: testListModel
+        delegate: TestListRow {}
     }
-
 }

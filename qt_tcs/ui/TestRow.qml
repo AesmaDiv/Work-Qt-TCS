@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 Item {
     objectName: "row_"+index
-    width: 330
+    width: 350
     height: 26
 
     property color txt_color: mouseArea.containsMouse ? "black" : "white"
@@ -30,17 +30,17 @@ Item {
             width: 40
             objectName: "txtId"
             color: txt_color
-            text: model.modelData.record
+            text: "99990"
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 8
             font.family: "Verdana"
         }
         Text {
             id: txtDateTime
-            width: 110
+            width: 100
             objectName: "txtDateTime"
             color: txt_color
-            text: model.modelData.dateTime
+            text: "01.01.2019 23:59"
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 8
             font.family: "Verdana"
@@ -50,7 +50,7 @@ Item {
             width: 70
             objectName: "txtOrder"
             color: txt_color
-            text: model.modelData.order
+            text: "0123456789"
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 8
             font.family: "Verdana"
@@ -60,7 +60,7 @@ Item {
             width: 100
             objectName: "txtSerial"
             color: txt_color
-            text: model.modelData.serial
+            text: "0123456789"
             anchors.verticalCenter: parent.verticalCenter
             font.pointSize: 8
             font.family: "Verdana"

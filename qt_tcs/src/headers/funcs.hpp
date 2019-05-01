@@ -11,7 +11,7 @@
 #include <string>
 
 #include "./globals.hpp"
-#include "./database.hpp"
+#include "../classes/database.hpp"
 
 namespace Funcs {
     namespace Tools {

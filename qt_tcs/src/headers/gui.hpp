@@ -6,15 +6,18 @@
 #include <QHostAddress>
 #include <QObject>
 #include <QString>
+#include <QVariant>
 
 #include "./globals.hpp"
 #include "./events.hpp"
 #include "./funcs.hpp"
 
+#include "../classes/testlistrow.hpp"
+
 namespace GUI {
     namespace TestList {
-        QList<QObject*> CreateRows(QObject* root, const DataBase::DBTable &table);
         DataBase::DBTable ReadTable();
+        QList<QObject*> CreateRows(const DataBase::DBTable &table);
         void Fill(QObject* root);
     }
 }
@@ -22,55 +25,38 @@ namespace GUI {
 /* ******************************************************** TestList ****************************************************** */
 /* ************************************************************************************************************************ */
 DataBase::DBTable GUI::TestList::ReadTable() {
-    std::string path_to_db = "/home/aesma/Develop/db/TCS.sqlite";
     std::string columns = Funcs::Tools::Combine(Globals::Consts::TESTLIST_COLUMNS, ", ");
     std::string select_value = "Select " + columns + " from Tests;";
-    DataBase db(path_to_db);
+    DataBase db(Globals::Vars::path_to_db);
     DataBase::DBTable result;
     db.ExecuteSqlQuery(select_value, result);
 
     return result;
 }
-QList<QObject*> GUI::TestList::CreateRows(QObject* root, const DataBase::DBTable &table) {
+QList<QObject*> GUI::TestList::CreateRows(const DataBase::DBTable &table) {
     QList<QObject*> result;
-    QQmlEngine* engine = QtQml::qmlEngine(root);
-    QQmlComponent component(engine, QUrl("qrc:/ui/TestListRow.qml"));
-    for(auto row : table) {
-//        component.setProperty("recId", QString::fromStdString(row[0]));
-//        component.setProperty("dateTime", QString::fromStdString(row[1]));
-//        component.setProperty("order", QString::fromStdString(row[2]));
-//        component.setProperty("serial", QString::fromStdString(row[3]));
-        QObject* obj = component.create();
-        if (obj) {
-            obj->setProperty("recId", "QString::fromStdString(row[0])");
-            obj->setProperty("dateTime", "QString::fromStdString(row[1])");
-            obj->setProperty("order", "QString::fromStdString(row[2])");
-            obj->setProperty("serial", "QString::fromStdString(row[3])");
-//            obj->setProperty("recId", QString::fromStdString(row[0]));
-//            obj->setProperty("dateTime", QString::fromStdString(row[1]));
-//            obj->setProperty("order", QString::fromStdString(row[2]));
-//            obj->setProperty("serial", QString::fromStdString(row[3]));
-
-            result.append(obj);
-        } else {
-            std::cerr << "Main::CreateListOfRows::error: cant create TestListRow object\n";
-            break;
-        }
+    for(auto rec : table) {
+        TestListRow* row = new TestListRow();
+        row->setRecord(QString::fromStdString(rec[0]));
+        row->setDateTime(QString::fromStdString(rec[1]));
+        row->setOrder(QString::fromStdString(rec[2]));
+        row->setSerial(QString::fromStdString(rec[3]));
+        result.append(row);
     }
-
 
     return result;
 }
 void GUI::TestList::Fill(QObject* root) {
     DataBase::DBTable table = ReadTable();
     if (table.size() > 0) {
-        QList<QObject*> rows = CreateRows(root, table);
+        QList<QObject*> rows = CreateRows(table);
         if (rows.size() > 0) {
             QObject* testList = root->findChild<QObject*>("testList");
             if (testList) {
                 QQmlEngine *engine = QtQml::qmlEngine(testList);
                 if (engine)
-                    engine->rootContext()->setContextProperty(QStringLiteral("testListViewModel"), QVariant::fromValue(rows));
+                    engine->rootContext()->setContextProperty("testListModel", QVariant::fromValue(rows));
+
             }
         }
     }
