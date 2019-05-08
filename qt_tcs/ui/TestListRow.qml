@@ -37,7 +37,7 @@ Item {
         }
         Text {
             id: txtDateTime
-            width: 110
+            width: 100
             objectName: "txtDateTime"
             color: txt_color
             text: model.modelData.dateTime
@@ -47,7 +47,7 @@ Item {
         }
         Text {
             id: txtOrder
-            width: 70
+            width: 80
             objectName: "txtOrder"
             color: txt_color
             text: model.modelData.order

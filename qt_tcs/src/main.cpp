@@ -3,8 +3,9 @@
 #include <QHostAddress>
 
 #include "./headers/globals.hpp"
-#include "./headers/gui.hpp"
 #include "./headers/funcs.hpp"
+#include "./headers/events.hpp"
+#include "./headers/gui.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
     QObject::connect(Globals::Vars::dispatcher, &Dispatcher::eventSignal_String, Events::EventString);
     QObject::connect(Globals::Vars::dispatcher, &Dispatcher::eventSignal_Variant, Events::EventVariant);
 
+    GUI::TcsInfo::Prepare();
     GUI::TestList::Fill(Globals::Vars::root_wnd);
 
     Events::RegisterEvent("testList",SIGNAL(onItemClicked(QString)), SLOT(eventSlot_String(QString)));

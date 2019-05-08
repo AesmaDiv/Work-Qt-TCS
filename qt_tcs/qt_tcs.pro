@@ -1,4 +1,4 @@
-QT += quick
+QT += quick sql
 QT += core network
 CONFIG += c++11
 
@@ -37,7 +37,8 @@ HEADERS += \
     src/headers/funcs.hpp \
     src/headers/gui.hpp \
     src/headers/events.hpp \
-    src/classes/testlistrow.hpp
+    src/classes/testlistrow.hpp \
+    src/classes/record.hpp
 
 DISTFILES +=
 LIBS += -lsqlite3

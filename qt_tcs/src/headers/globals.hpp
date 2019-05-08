@@ -5,27 +5,33 @@
 #include <string>
 
 #include "../classes/dispatcher.hpp"
+#include "../classes/record.hpp"
 #include "../classes/database.hpp"
 
 namespace Globals {
     namespace Consts {
         static const std::vector<std::string> TESTLIST_COLUMNS = {
-            "ID","EndDT","OrderNum","SerialNum"
+            "ID","DateTime","OrderNum","SerialNum"
         };
-        static const std::vector<std::string> RECORD_COLUMNS = {
-            "ID","BeginDT","EndDT","Customer","OrderNum","StationType","StationClass","SerialNum","CurrentRat","CurrentMinLim","CurrentMaxLim",
+        static const QStringList RECORD_COLUMNS = {
+            "ID","DateTime","Customer","OrderNum","StationType","StationClass","SerialNum","CurrentRat","CurrentMinLim","CurrentMaxLim",
             "Timer","Operator","DataStages","ResultID","Verdict","Information","Note","Stand","d1","d2","d3","d4","d5"
         };
-        static const std::vector<std::string> TYPE_COLUMNS = {
-            "ID","Producer","StationType","Inom","Imax","Pnom","Usec","MaxRPM","MinRPM","EngineControl","IsSpeedChanging","Instruction"
+        static const QStringList STATION_INFO_COLUMNS = {
+            "Producer","Name","Inom","Imax","Pnom","Usec","MaxRPM","MinRPM"
         };
+
     }
     namespace Vars {
         QObject* root_wnd = nullptr;
         Dispatcher *dispatcher = nullptr;
-        std::string path_to_db = "/home/aesma/Developer/db/TCS.sqlite";
-
+        QString path_to_db = "/home/aesma/Develop/db/TCS.sqlite";
+        Record* record = nullptr;
+        Record* stationType = nullptr;
     }
+
+
+
 }
 
 #endif // GLOBALS_HPP

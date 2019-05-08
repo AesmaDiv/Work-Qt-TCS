@@ -32,7 +32,8 @@ Window {
         checked: swipeView.currentIndex
     }
     Rectangle {
-        width: 340
+        id: rectSwipe
+        width: 420
         height: 700
         color: "#00000000"
         anchors.left: parent.left
@@ -45,19 +46,20 @@ Window {
 
         SwipeView {
             id: swipeView
+            interactive: false
             anchors.fill: parent
             currentIndex: switchTestList.checked ? 1 : 0
 
             TestList {
                 id: testList
                 objectName: "testList"
-                width: 340
+                width: rectSwipe.width
                 height: 700
             }
             TcsInfo {
                 id: tcsInfo
                 objectName: "tcsInfo"
-                width: 340
+                width: rectSwipe.width
                 height: 700
             }
         }

@@ -10,8 +10,8 @@ class Dispatcher : public QObject
 public:
     explicit Dispatcher(QObject *parent = nullptr) : QObject(parent) {}
 
-    bool setProperty(const char* object_name, const char* property_name, const QVariant &value);
-    bool getProperty(const char* object_name, const char* property_name, QVariant &value);
+    bool setProperty(const QString &object_name, const QString &property_name, const QVariant &value);
+    QVariant getProperty(const QString &object_name, const QString &property_name);
 signals:
     void eventSignal_String(const QString &message);
     void eventSignal_Variant(const QVariant &variant);
@@ -21,21 +21,19 @@ public slots:
 };
 
 
-inline bool Dispatcher::setProperty(const char* object_name, const char* property_name, const QVariant &value) {
+inline bool Dispatcher::setProperty(const QString &object_name, const QString &property_name, const QVariant &value) {
     QObject* obj = this->parent()->findChild<QObject*>(object_name);
     if (obj == nullptr) {
         return false;
     }
-    obj->setProperty(property_name, value);
-    return true;
+    return obj->setProperty(property_name.toStdString().c_str(), value);
 }
-inline bool Dispatcher::getProperty(const char* object_name, const char* property_name, QVariant &value) {
+inline QVariant Dispatcher::getProperty(const QString &object_name, const QString &property_name) {
     QObject* obj = this->parent()->findChild<QObject*>(object_name);
     if (obj == nullptr) {
         return false;
     }
-    value = obj->property(property_name);
-    return true;
+    return obj->property(property_name.toStdString().c_str());
 }
 inline void Dispatcher::eventSlot_String(const QString &message) {
     this->eventSignal_String(message);

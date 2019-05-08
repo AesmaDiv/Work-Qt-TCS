@@ -54,9 +54,14 @@ Rectangle {
         objectName: "testListView"
         x: 5
         y: 38
-        width: 320
+        width: 330
         height: 454
         model: testListModel
-        delegate: TestListRow {}
+        delegate: TestListRow {
+            MouseArea {
+                anchors.fill: parent
+                onClicked: onItemClicked("TestListItem:" + modelData.record)
+            }
+        }
     }
 }
