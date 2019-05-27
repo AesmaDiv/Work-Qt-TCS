@@ -6,7 +6,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QVariant>
-
+#include <QDebug>
 
 class Record
 {
@@ -15,82 +15,33 @@ public:
         QString Name;
         QString Value;
     };
-
-    Record(const QString path_to_db, const QString table) : _path_to_db(path_to_db), _table(table) {}
+    Record(const QString path_to_db, const QString &table, const QStringList &columns);
+    //Record(const QString path_to_db, const QString command) : _PATH_TO_DB(path_to_db), _command(command) {}
     ~Record() = default;
 
     bool read(const int &id);
-    QString getValue(const QString &name);
+    bool save(const int &id = 0);
+
+    QString getValue(const QString &name) const;
     bool setValue(const QString &name, const QString value);
 
     QList<Pair> pairs() const { return _pairs; }
 private:
+    const QString _PATH_TO_DB;
+    const QString _TABLE;
+
+    QSqlDatabase _db;
     QList<Pair> _pairs;
-    QString _path_to_db;
-    QString _table;
-    bool _fillPairs(const int &id);
+
+    bool _is_new = true;
+    QString _command;
+
+    QString _buildSelectCommand(const QStringList &columns);
+    QString _buildInsertCommand(const QList<Pair> &pairs);
+    QString _buildUpdateCommand(const QList<Pair> &pairs);
+
+    int _executeInsert(const QString &command);
+    bool _readPairs(const int &id);
 };
-
-inline bool Record::read(const int &id) {
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(_path_to_db);
-    if (db.open()) {
-        if (!_fillPairs(id)) {
-            qDebug("StationType::Read::Error::Failed to read pairs.");
-            db.close();
-            return false;
-        }
-        db.close();        
-    } else {
-        qDebug("StationType::Read::Error::Cant open database.");
-        return false;
-    }
-    return true;
-}
-inline QString Record::getValue(const QString &name) {
-    QString result = "Not found";
-    for(auto item : _pairs)
-        if (item.Name == name) {
-            result = item.Value;
-            break;
-        }
-    return result;
-}
-inline bool Record::setValue(const QString &name, const QString value) {
-    bool result = false;
-    for(auto item : _pairs)
-        if (item.Name != name){
-            item.Value = value;
-            result = true;
-            break;
-        }
-    return result;
-}
-
-inline bool Record::_fillPairs(const int &id) {
-    QSqlQuery query;
-    QString command = "Select * From " + _table + " Where ID=" + QString::number(id) + ";";
-    if (query.exec(command)) {
-        if (query.next()){
-            QSqlRecord rec = query.record();
-            int count = rec.count();
-            int index = 0;
-            while (index < count) {
-                _pairs.append({
-                                  rec.fieldName(index),         // Name
-                                  query.value(index).toString() // Value
-                              });
-                ++index;
-            }
-
-        }
-        return true;
-    } else {
-        qDebug() << query.lastError();
-        return false;
-    }
-}
-
-
 #endif // RECORD_HPP
 

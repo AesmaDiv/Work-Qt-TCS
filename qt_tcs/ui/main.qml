@@ -27,6 +27,7 @@ Window {
     }
     Switch {
         id: switchTestList
+        objectName: "switchTestList"
         x: 151
         y: 29
         checked: swipeView.currentIndex

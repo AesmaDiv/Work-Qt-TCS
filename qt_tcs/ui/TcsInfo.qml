@@ -9,10 +9,32 @@ Item {
     property int combo_width: 280
 
     property bool is_adding: false
+    property bool is_editable: false
+    property bool is_event_enabled: true
+
 
     id: root
     width: 420
     height: 420
+
+    signal onEvent(string message)
+    signal onComboItemSelected(variant item)
+
+    function sendCurrentItem(item_type, selected_item) {
+        if (is_event_enabled) {
+            var result = ["TcsInfo", item_type, selected_item[0], selected_item[1]]
+            onComboItemSelected(result)
+        }
+    }
+    function setCurrentDateTime() {
+        var date = new Date(Date.now())
+        var y = date.getFullYear()
+        var m = date.getMonth()
+        var d = date.getDate()
+        var dateString = [y,m,d].join('-')
+        dfDateTime.value = dateString
+    }
+
 
     Rectangle {
         id: rectangle
@@ -30,22 +52,32 @@ Item {
                 width: df_text_width - 16
                 anchors.left: parent.left
                 anchors.leftMargin: 0
-                width_value: 155
+                widthValue: 155
                 header: "Дата/время:"
-                value: "1979.09.14 01:00"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: false
             }
             DataField {
-                id: dfOrder
-                objectName: "dfOrder"
+                id: dfOrderNum
+                objectName: "dfOrderNum"
                 width: df_text_width - 16
                 anchors.left: parent.left
                 anchors.leftMargin: 0
-                width_value: 155
+                widthValue: 155
                 header: "Наряд-заказ:"
-                value: "1122334455"
+                headerAlignment: Text.AlignRight
+                isCombo: false
+                isEditable: is_editable
+            }
+            DataField {
+                id: dfSerialNum
+                objectName: "dfSerialNum"
+                width: df_text_width - 16
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                widthValue: 155
+                header: "Заводской №:"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: false
@@ -56,11 +88,15 @@ Item {
                 width: df_combo_width
                 anchors.left: parent.left
                 anchors.leftMargin: 0
-                width_value: combo_width
+                widthValue: combo_width
                 header: "Заказчик:"
-                value: "Лукойл ЗС"
                 headerAlignment: Text.AlignRight
                 isCombo: true
+                isEditable: false
+                onCurrentIndexChanged: {
+                    //sendCurrentItem("Customer", values[currentIndex])
+                    currentText = values[currentIndex][1].toString()
+                }
             }
             ToolSeparator {
                 width: root.width - 20
@@ -74,12 +110,15 @@ Item {
                 width: df_combo_width
                 anchors.left: parent.left
                 anchors.leftMargin: 0
-                width_value: combo_width
+                widthValue: combo_width
                 header: "Производитель:"
-                value: "ООО \"ИРЗ\""
                 headerAlignment: Text.AlignRight
                 isCombo: true
                 isEditable: false
+                onCurrentIndexChanged:{
+                    sendCurrentItem("Producer", values[currentIndex])
+                    currentText = values[currentIndex][1].toString()
+                }
             }
             DataField {
                 id: dfStationType
@@ -87,12 +126,15 @@ Item {
                 width: df_combo_width
                 anchors.left: parent.left
                 anchors.leftMargin: 0
-                width_value: combo_width
+                widthValue: combo_width
                 header: "Тип:"
-                value: "ИРЗ-500-12-БП"
                 headerAlignment: Text.AlignRight
                 isCombo: true
                 isEditable: false
+                onCurrentIndexChanged:{
+                    sendCurrentItem("StationType", values[currentIndex])
+                    currentText = values[currentIndex][1].toString()
+                }
             }
             ToolSeparator {
                 width: 415
@@ -103,11 +145,10 @@ Item {
                 id: dfInom
                 objectName: "dfInom"
                 width: df_text_width
-                width_value: text_width
+                widthValue: text_width
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 header: "Номинал I,А:"
-                value: "150"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: is_adding
@@ -116,11 +157,10 @@ Item {
                 id: dfPnom
                 objectName: "dfPnom"
                 width: df_text_width
-                width_value: text_width
+                widthValue: text_width
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 header: "Номинал P,кВт:"
-                value: "420"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: is_adding
@@ -129,11 +169,10 @@ Item {
                 id: dfImax
                 objectName: "dfImax"
                 width: df_text_width
-                width_value: text_width
+                widthValue: text_width
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 header: "Максимальный I,А:"
-                value: "150"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: is_adding
@@ -142,11 +181,10 @@ Item {
                 id: dfUsec
                 objectName: "dfUsec"
                 width: df_text_width
-                width_value: text_width
+                widthValue: text_width
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 header: "Втор.обмотка U,В:"
-                value: "950"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: is_adding
@@ -155,11 +193,10 @@ Item {
                 id: dfMaxRPM
                 objectName: "dfMaxRPM"
                 width: df_text_width
-                width_value: text_width
+                widthValue: text_width
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 header: "Макс.скорость,об/мин:"
-                value: "500"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: is_adding
@@ -168,24 +205,14 @@ Item {
                 id: dfMinRPM
                 objectName: "dfMinRPM"
                 width: df_text_width
-                width_value: text_width
+                widthValue: text_width
                 anchors.right: parent.right
                 anchors.rightMargin: 10
                 header: "Мин.скорость,об/мин:"
-                value: "3000"
                 headerAlignment: Text.AlignRight
                 isCombo: false
                 isEditable: is_adding
-            }
-            Button {
-                width: text_width
-                height: 24
-                text: "добавить тип"
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-
-                onClicked: is_adding = !is_adding
-            }
+            }            
         }
     }
 

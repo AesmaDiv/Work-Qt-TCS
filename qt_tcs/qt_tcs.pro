@@ -14,7 +14,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/main.cpp
+    src/main.cpp \
+    src/functions/gui.cpp \
+    src/functions/funcs.cpp \
+    src/functions/events.cpp \
+    src/classes/record.cpp \
+    src/classes/database.cpp \
+    src/classes/dispatcher.cpp \
+    src/classes/testlistrow.cpp
 
 RESOURCES += qml.qrc
 
@@ -31,14 +38,14 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    src/classes/dispatcher.hpp \
+    src/functions/gui.hpp \
+    src/functions/funcs.hpp \
+    src/functions/events.hpp \
+    src/classes/globals.hpp \
+    src/classes/record.hpp \
     src/classes/database.hpp \
-    src/headers/globals.hpp \
-    src/headers/funcs.hpp \
-    src/headers/gui.hpp \
-    src/headers/events.hpp \
-    src/classes/testlistrow.hpp \
-    src/classes/record.hpp
+    src/classes/dispatcher.hpp \
+    src/classes/testlistrow.hpp
 
 DISTFILES +=
 LIBS += -lsqlite3

@@ -3,9 +3,7 @@ import QtQuick.Controls 2.0
 import QtQuick.Controls 2.5
 
 Rectangle {
-    signal onSelectionChanged(variant current_item)
-    signal onFilter(string message)
-    signal onItemClicked(string message)
+    signal onEvent(string message)
 
 //    property ListModel testListModel: ListModel{}
 
@@ -46,22 +44,50 @@ Rectangle {
         icon.source: "qrc:/images/magnifier.png"
         display: AbstractButton.IconOnly
 
-        onClicked: onFilter(txtFilter.text)
+        onClicked: onEvent("TestList:Filter:" + txtFilter.text)
     }
 
     ListView {
         id: testListView
         objectName: "testListView"
-        x: 5
-        y: 38
-        width: 330
-        height: 454
+        anchors.margins: 5
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.bottom: btnNewRecord.top
+        anchors.top: txtFilter.bottom
         model: testListModel
         delegate: TestListRow {
             MouseArea {
                 anchors.fill: parent
-                onClicked: onItemClicked("TestListItem:" + modelData.record)
+                onDoubleClicked: onEvent("TestList:ItemSelected:" + modelData.record)
             }
         }
     }
+
+    Button {
+        id: btnNewRecord
+        height: 24
+        text: "новая запись"
+        display: AbstractButton.TextOnly
+        anchors.right: parent.right
+        anchors.rightMargin: 5
+        anchors.left: parent.left
+        anchors.leftMargin: 5
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 5
+
+        onClicked: {
+            onEvent("TestList:NewTest:")
+            tcsInfo.setCurrentDateTime()
+        }
+    }
 }
+
+
+
+
+
+/*##^## Designer {
+    D{i:3;anchors_height:440;anchors_width:330;anchors_x:5;anchors_y:38}D{i:6;anchors_width:330}
+}
+ ##^##*/

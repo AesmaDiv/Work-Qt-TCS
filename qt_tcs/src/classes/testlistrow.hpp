@@ -44,29 +44,4 @@ private:
 
 };
 
-inline void TestListRow::setRecord(const QString &record) {
-    if (m_record != record) {
-        m_record = record;
-        emit recordChanged();
-    }
-}
-inline void TestListRow::setDateTime(const QString &dateTime) {
-    if (m_dateTime != dateTime) {
-        m_dateTime = dateTime;
-        emit dateTimeChanged();
-    }
-}
-inline void TestListRow::setOrder(const QString &order) {
-    if (m_order != order) {
-        m_order = order;
-        emit orderChanged();
-    }
-}
-inline void TestListRow::setSerial(const QString &serial) {
-    if (m_serial != serial) {
-        m_serial = serial;
-        emit serialChanged();
-    }
-}
-
 #endif // TESTLISTROW_HPP

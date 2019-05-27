@@ -9,25 +9,31 @@ Row {
     property int headerAlignment: Text.AlignLeft
     property int valueAlignment: Text.AlignLeft
 
-    property int width_value: 210
-    property int width_popup: width_value
+    property int widthValue: 210
+    property int widthPopup: widthValue
 
     property string header: "Заголовок"
     property string value: "значение"
-    property alias current_index: cmbValues.currentIndex
-    property alias current_text: cmbValues.displayText
     property variant values: []
+
+    property alias currentIndex: cmbValues.currentIndex
+    property alias currentText: cmbValues.displayText
 
     function reload() {
         var index = cmbValues.currentIndex
-        var str = ""
+        var id = -1;
+        var name = ""
         var width = 0
         var model = []
         values.forEach(function (item, i, values) {
-            str = values[i].toString();
-            width = str.length * 8;
-            if (width > width_popup) width_popup = width;
-            model.push({ display_text: values[i] });
+            id = values[i][0]
+            name = values[i][1].toString();
+            width = name.length * 8;
+            if (width > widthPopup) widthPopup = width;
+            model.push({
+                           rec_id: id,
+                           display_text: name
+                       });
         })
         cmbValues.model = model
         cmbValues.currentIndex = index
@@ -52,7 +58,7 @@ Row {
     }
     Rectangle {
         id: rectValue
-        width: width_value
+        width: widthValue
         height: 24
         anchors.right: root.right
         anchors.rightMargin: 0
@@ -66,7 +72,7 @@ Row {
             topPadding: 4
             anchors.verticalCenter: parent.verticalCenter
             anchors.fill: parent
-            selectionColor: "#000000"
+            selectionColor: "#333333"
             selectByMouse: true
             font.pixelSize: 12
             horizontalAlignment: valueAlignment
@@ -84,7 +90,7 @@ Row {
             editable: isEditable
             textRole: "display_text"
             delegate: ItemDelegate {
-                width: width_popup - 2
+                width: widthPopup - 2
                 height: 24
                 highlighted: cmbValues.highlightedIndex === index
                 background: Rectangle {
@@ -100,7 +106,7 @@ Row {
             popup: Popup {
                 id: pop
                 y: cmbValues.height - 1
-                width: width_popup
+                width: widthPopup
                 implicitHeight: contentItem.implicitHeight
                 padding: 1
                 background: Rectangle {
@@ -108,7 +114,7 @@ Row {
                     border.color: "white"
                     border.width: 1
                     radius: 2
-                    width: width_popup
+                    width: widthPopup
                     height: pop.height + 2
                 }
                 contentItem: ListView {
